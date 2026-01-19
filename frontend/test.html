@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Backend Test</title>
+</head>
+<body>
+
+<h2>Test Generate Questions</h2>
+
+<input id="role" placeholder="Role"><br><br>
+<input id="skills" placeholder="Skills"><br><br>
+
+<button id="btn">Generate</button>
+
+<pre id="result"></pre>
+
+<script>
+document.getElementById("btn").addEventListener("click", async () => {
+  const role = document.getElementById("role").value;
+  const skills = document.getElementById("skills").value;
+
+  document.getElementById("result").innerText = "Loading...";
+
+  const res = await fetch("http://127.0.0.1:8000/interview", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      role: role,
+      skills: skills,
+      answer: null
+    })
+  });
+
+  const data = await res.json();
+  document.getElementById("result").innerText = data.response;
+});
+</script>
+
+</body>
+</html>

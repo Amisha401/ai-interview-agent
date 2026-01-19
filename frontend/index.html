@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Interview Agent</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: white;
+      width: 420px;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0px 10px 30px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 15px;
+      display: block;
+      color: #444;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #5a67d8;
+    }
+
+    .output {
+      margin-top: 25px;
+      padding: 15px;
+      background: #f4f6ff;
+      border-radius: 8px;
+      min-height: 120px;
+      white-space: pre-wrap;
+      border: 1px solid #ddd;
+      color: #333;
+    }
+
+    .loading {
+      text-align: center;
+      color: #667eea;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>AI Interview Agent</h2>
+
+  <label>Role</label>
+  <input id="role" placeholder="e.g. Software Engineer">
+
+  <label>Skills</label>
+  <input id="skills" placeholder="e.g. Python, Java, DSA">
+
+  <label>Your Answer (optional)</label>
+  <textarea id="answer" rows="4" placeholder="Write your answer here..."></textarea>
+
+  <div class="buttons">
+    <button id="genBtn">Generate Questions</button>
+<!-- <button onclick="evaluateAnswer()">Evaluate Answer</button> -->
+
+
+  </div>
+
+  <div class="output" id="result">AI response will appear here...</div>
+</div>
+
+<script>
+document.getElementById("genBtn").addEventListener("click", async () => {
+  const role = document.getElementById("role").value;
+  const skills = document.getElementById("skills").value;
+
+  document.getElementById("result").innerText = "Generating questions...";
+
+  try {
+    const res = await fetch("http://127.0.0.1:8000/interview", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        role: role,
+        skills: skills,
+        answer: null
+      })
+    });
+
+    const data = await res.json();
+    document.getElementById("result").innerText = data.response;
+  } catch (err) {
+    console.error(err);
+    document.getElementById("result").innerText = "Error connecting to backend";
+  }
+});
+</script>
